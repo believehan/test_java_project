@@ -1,66 +1,32 @@
-class Tank {
-	String name;
-	int cannon;
-	boolean missile;
-	boolean reset = false;
-
-	void setting(String name, int cannon, boolean missile) {
-		this.name = name;
-		this.cannon = cannon;
-		this.missile = missile;
-		reset = true;
-	}
-
-	void tank_type() {
-		if (reset) {
-			System.out.printf("탱크명 : %s, 포종류 : %d단계, ", name, cannon);
-			System.out.println(missile ? "미사일 장착" : "미사일 미장착");
-//			System.out.printf("미사일 %s장착\n", missile ? "":"미");// 선생님 답
-		} else {
-			System.out.println("탱크 제작 실패");
-		}
-	}
-
-	void attack() {
-		System.out.println("\n");
-		System.out.printf("< %s 공격>", name);
-		
-		String casound="";
-		switch (cannon) {
-		case 1:
-			casound = "펑";
-			break;
-		case 2:
-			casound = "펑펑";
-			break;
-
-		case 3:
-			casound = "콰광";
-			break;
-		}
-		
-		System.out.printf("대포발사 : %s", casound);
-		if (missile) System.out.println("\n미사일 발사 : 초전박살");
-	}
-
-}
+import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) {
-		Tank k1 = new Tank();
-		Tank k2 = new Tank();
-		Tank k3 = new Tank();
+		int num, tot = 0;
+		Scanner sc = new Scanner(System.in);
 
-		k1.setting("K1", 1, false);
-		k2.setting("K2", 2, false);
-		k3.setting("K3", 3, true);
+		System.out.print("입력받을 인원 수 입력 : ");
+		num = sc.nextInt();
+		System.out.println("성명, 학번, 점수를 입력하시오!!");
+		Object[][] ar = new Object[num][3];
 
-		k1.tank_type();
-		k2.tank_type();
-		k3.tank_type();
-
-		k1.attack();
-		k2.attack();
-		k3.attack();
+		for (int i = 0; i < num; i++) {
+			System.out.print("성명 : ");
+			ar[i][0] = sc.next();
+			System.out.print("학번 : ");
+			ar[i][1] = sc.nextInt();
+			System.out.print("점수 : ");
+			ar[i][2] = sc.nextInt();
+			System.out.println();
+			tot += ar[i][2];
+		}
+		System.out.println("성명       학번       점수");
+		for (int i = 0; i < num; i++) {
+			System.out.printf("%s     %04d      %3d\n", 
+					(String)ar[i][0], (Integer)ar[i][1], (Integer)ar[i][2]);
+		}
+		
+		System.out.printf("총점 : %d,  평균 : %d", tot, tot/num);
+		sc.close();
 	}
 }
