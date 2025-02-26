@@ -1,63 +1,54 @@
-// 탱크정보만 출력, 엑세스 지정자, 생성자 사용
+class Car {
+	String name;
+	String color;
+	boolean gasoline;
 
-class Tank {
-	protected String name;
-	protected int cannon;
-	protected boolean missaile;
-	protected boolean nuclear;
-	static int takeNum;
-
-	public Tank(String name, int cannon) {
+	Car(String name, String color, boolean gasoline) {
 		this.name = name;
-		this.cannon = cannon;
+		this.color = color;
+		this.gasoline = gasoline;
 	}
 
-	public Tank(String name, int cannon, boolean missaile) {
-		this(name, cannon);
-		this.missaile = missaile;
-	}
-
-	public Tank(String name, int cannon, boolean missaile, boolean nuclear) {
-		this(name, cannon, missaile);
-		this.nuclear = nuclear;
-	}
-
-	public static void infoTank(Tank tank) {
-		System.out.printf("\n< %s 탱크 >", tank.name);
-		System.out.printf("\n대포 : %d단계", tank.cannon);
-		if (tank.missaile) {
-			System.out.printf("\n미사일 %s장착", tank.missaile ? "" : "미");
+	void run() {
+		if (gasoline) {
+			System.out.println("부릉 부릉");
+		} else {
+			System.out.println("덜컹 덜컹");
 		}
-		if (tank.nuclear) {
-			System.out.printf("\n핵미사일 %s장착", tank.nuclear ? "" : "미");
-		}
-		takeNum++;
-		System.out.printf("\n생산번호 : %d\n", takeNum);
 	}
 
-	public static void autoInfoTank(Tank... tank) {
-		System.out.println("=========================");
-		for (Tank auto : tank) {
-			infoTank(auto);
-		}
+	void stop() {
+		System.out.println("끼이익");
+	}
+}
 
+class Truck extends Car {
+	int Ton;
+
+	Truck(String name, String color, boolean gasoline, int ton) {
+		super(name, color, gasoline);
+		this.Ton = ton;
+	}
+
+	void run() {
+		System.out.println("우당탕 쿵탕");
+	}
+
+	void convey() { // 서브에 추가 정의한 메서드
+		System.out.println("짐을 실어 나른다");
 	}
 
 }
 
 public class Main {
 	public static void main(String[] args) {
-		Tank k1 = new Tank("K1", 1); // 객체
-		Tank k2 = new Tank("K2", 2, true);
-		Tank k2_1 = new Tank("K2_1", 2, true);
-		Tank k3 = new Tank("K3", 3, true, true);
+		Car myTruck = new Car("봉고", "파랑", true);
 
-		Tank.infoTank(k1); // 출력
-		Tank.infoTank(k2);
-		Tank.infoTank(k2_1);
-		Tank.infoTank(k3);
-
-		Tank.autoInfoTank(k1, k2); // 전달한 내용만 출력
-		Tank.autoInfoTank(k1, k2, k3);
-	}
-}
+		Truck anyTruck;
+		anyTruck = (Truck) myTruck; // 슈퍼타입의 변수가 가리키고 있는 실제 대상이 슈퍼객체인 상황에서 서브 타입으로
+									// 캐스팅 명시를 해봐야 당장 대입은 가능하나, 막상 실행을 해보면 예외가 발생
+		anyTruck.run();				// 되어 제대로 실행되지 않음. 강제로 서브타입 변수가 슈퍼타입 변수를 대입 받긴
+	}								// 했으나 실제 가리키는 대상이 슈퍼타입의 객체이다 보니 객체 지정 규직에 의해
+}									// 실행시 예외 발생. 이처럼 실행시에 객체의 타입이 결정되는 경우 대입은 가능하나
+									// 실행 시 문제가 야기 될 수 있으므로, 실제 실행중에 가리키고 있는 대상이 누구인지
+									// 판별할 수 있는 기능 필요
