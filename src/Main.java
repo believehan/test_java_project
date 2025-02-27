@@ -1,54 +1,54 @@
 class Car {
-	String name;
+	CarName name;
 	String color;
-	boolean gasoline;
 
-	Car(String name, String color, boolean gasoline) {
-		this.name = name;
-		this.color = color;
-		this.gasoline = gasoline;
+	Car(String aModel, int aYear, String aColor) {
+		name=new CarName(aModel, aYear);
+		color = aColor;
 	}
 
-	void run() {
-		if (gasoline) {
-			System.out.println("부릉 부릉");
-		} else {
-			System.out.println("덜컹 덜컹");
+	class CarName {		// 이너 클래스는 클래스가 아닌 객체에 소속되며, 따라서 주 클래스 외부에서 이너 클래스 객체를 생성하려면 33행과
+		String model;	// 같이 주 객체가 먼저 생성되어야만 39행과 같은 주 클래스에 소속된 이너 클래스 타입의 객체 생성 가능
+		int year; 
+
+		CarName(String aModel, int aYear) {
+			model=aModel;
+			year=aYear;
 		}
+		
+		// 비정적 이너 클래스 내부에서는 외부 클래스의 모든 멤버를 직접(즉, 객체 생성 없이) 사용할 수 있어요.
+		
+		// 반대로, 외부 클래스에서 이너 클래스의 멤버를 사용하려면 
+		// 반드시 이너 클래스의 객체를 생성한 후, 그 객체를 통해 접근해야 해요.
+		void outColor() {
+			System.out.println("색상은 " + color + "입니다."); 	// 이너 클래스 내 모든 멤버는 주 클래스의 모든 멤버와 동등한 자격을 가지며 
+		}													// 정적 이너 클래스와 달리 주 클래스의 모든 멤버를 정적 또는 비정적 여부에
+															// 상관없이 직접 참조 가능. 하지만 반대가 되는 즉, 주 클래스의 종속 클래스
+	}														// 접근은 정적 이너 클래스와 마찬가지로 이너 클래스 또한 Car객체에 소속된
+															// 독립적인 클래스 타입이므로 반드시 내부적으로 이너 클래스 객체를 생성
+															// 해야만 그 내부 멤버를 참조가능
+	void outInfo() {
+		System.out.printf("모델=%s, 년식=%d, 색상=%s\n", name.model, name.year, color);
 	}
-
-	void stop() {
-		System.out.println("끼이익");
-	}
-}
-
-class Truck extends Car {
-	int Ton;
-
-	Truck(String name, String color, boolean gasoline, int ton) {
-		super(name, color, gasoline);
-		this.Ton = ton;
-	}
-
-	void run() {
-		System.out.println("우당탕 쿵탕");
-	}
-
-	void convey() { // 서브에 추가 정의한 메서드
-		System.out.println("짐을 실어 나른다");
-	}
-
 }
 
 public class Main {
 	public static void main(String[] args) {
-		Car myTruck = new Car("봉고", "파랑", true);
-
-		Truck anyTruck;
-		anyTruck = (Truck) myTruck; // 슈퍼타입의 변수가 가리키고 있는 실제 대상이 슈퍼객체인 상황에서 서브 타입으로
-									// 캐스팅 명시를 해봐야 당장 대입은 가능하나, 막상 실행을 해보면 예외가 발생
-		anyTruck.run();				// 되어 제대로 실행되지 않음. 강제로 서브타입 변수가 슈퍼타입 변수를 대입 받긴
-	}								// 했으나 실제 가리키는 대상이 슈퍼타입의 객체이다 보니 객체 지정 규직에 의해
-}									// 실행시 예외 발생. 이처럼 실행시에 객체의 타입이 결정되는 경우 대입은 가능하나
-									// 실행 시 문제가 야기 될 수 있으므로, 실제 실행중에 가리키고 있는 대상이 누구인지
-									// 판별할 수 있는 기능 필요
+		Car pride = new Car("프라이드", 2005, "파랑");
+		pride.outInfo();
+		
+//		pride.CarName pride2 = pride.new CarName("프랑이", 2009);	// CarName클래스는 객체에 소속이되므로 이와 같은 변수 선언시
+		Car.CarName pride2 = pride.new CarName("프랑이", 2009);	// pride객체의 CarName타입으로 변수를 선언하는 문법적 오해를
+																// 할 수 있으나, 타입 지정자에는 객체 자체가 올 수 없음. 따라서
+																// 변수 선언부는 정적클래스와 동일하게 클래스 타입안의 타입의
+																// 형태로 선언하는 것이 적법
+																// 단, CarName객체의 생성은 Car타입의 객체 pride에 종속되어
+																// "주 객체.new 이너 클래스명(생성자)"와 같은 형태로 new연산자
+		System.out.println();									// 앞에서 주 객체 소속임을 밝혔으므로 변수 선언부와 같이
+																// 주 클래스 소속임을 다시 명시하지 않고 이너 클래스 생성자를 직접 호출
+		
+		pride.outInfo(); 		// pride2는 외부에 생성된 이너 클래스 타입의 독립적인 객체로써 주 객체인
+								// pride를 통해 생성이 되었을 뿐 두 객체는 전혀 다른 별도의 객체임
+		System.out.printf("모델=%s, 년식=%d\n", pride2.model, pride2.year);
+	}
+}
