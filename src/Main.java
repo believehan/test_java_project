@@ -1,54 +1,46 @@
-class Car {
-	CarName name;
-	String color;
+/*
+ *  < 인터페이스를 통한 공통기능의 확장 >
+ *  개별 객체에 대한 공통적인 기능에 대하여 그 세부적 내용만 차이가 있는 경우, 인터페이스에 그 공통
+ *  기능을 명시하고 다수의 클래스에 각각의 세부 내용을 구현 재정의(Overriding)함으로써 개별
+ *  객체 생성시 동일 인터페이스 타입 변수로 받음에 따라 공통 기능에 대한 세부적 다형성 확보가능
+*/
+interface Func{		// 공통 인터페이스
+	void func1();
+	void func2();
+}
 
-	Car(String aModel, int aYear, String aColor) {
-		name=new CarName(aModel, aYear);
-		color = aColor;
+class ImpleClass1 implements Func {
+	@Override
+	public void func1() {
+		System.out.println("구현1-1");
 	}
 
-	class CarName {		// 이너 클래스는 클래스가 아닌 객체에 소속되며, 따라서 주 클래스 외부에서 이너 클래스 객체를 생성하려면 33행과
-		String model;	// 같이 주 객체가 먼저 생성되어야만 39행과 같은 주 클래스에 소속된 이너 클래스 타입의 객체 생성 가능
-		int year; 
-
-		CarName(String aModel, int aYear) {
-			model=aModel;
-			year=aYear;
-		}
-		
-		// 비정적 이너 클래스 내부에서는 외부 클래스의 모든 멤버를 직접(즉, 객체 생성 없이) 사용할 수 있어요.
-		
-		// 반대로, 외부 클래스에서 이너 클래스의 멤버를 사용하려면 
-		// 반드시 이너 클래스의 객체를 생성한 후, 그 객체를 통해 접근해야 해요.
-		void outColor() {
-			System.out.println("색상은 " + color + "입니다."); 	// 이너 클래스 내 모든 멤버는 주 클래스의 모든 멤버와 동등한 자격을 가지며 
-		}													// 정적 이너 클래스와 달리 주 클래스의 모든 멤버를 정적 또는 비정적 여부에
-															// 상관없이 직접 참조 가능. 하지만 반대가 되는 즉, 주 클래스의 종속 클래스
-	}														// 접근은 정적 이너 클래스와 마찬가지로 이너 클래스 또한 Car객체에 소속된
-															// 독립적인 클래스 타입이므로 반드시 내부적으로 이너 클래스 객체를 생성
-															// 해야만 그 내부 멤버를 참조가능
-	void outInfo() {
-		System.out.printf("모델=%s, 년식=%d, 색상=%s\n", name.model, name.year, color);
+	@Override
+	public void func2() {
+		System.out.println("구현1-2");		
+	}	
+}
+class ImpleClass2 implements Func {
+	@Override
+	public void func1() {
+		System.out.println("구현2-1");
 	}
+	
+	@Override
+	public void func2() {
+		System.out.println("구현2-2");		
+	}	
 }
 
 public class Main {
 	public static void main(String[] args) {
-		Car pride = new Car("프라이드", 2005, "파랑");
-		pride.outInfo();
-		
-//		pride.CarName pride2 = pride.new CarName("프랑이", 2009);	// CarName클래스는 객체에 소속이되므로 이와 같은 변수 선언시
-		Car.CarName pride2 = pride.new CarName("프랑이", 2009);	// pride객체의 CarName타입으로 변수를 선언하는 문법적 오해를
-																// 할 수 있으나, 타입 지정자에는 객체 자체가 올 수 없음. 따라서
-																// 변수 선언부는 정적클래스와 동일하게 클래스 타입안의 타입의
-																// 형태로 선언하는 것이 적법
-																// 단, CarName객체의 생성은 Car타입의 객체 pride에 종속되어
-																// "주 객체.new 이너 클래스명(생성자)"와 같은 형태로 new연산자
-		System.out.println();									// 앞에서 주 객체 소속임을 밝혔으므로 변수 선언부와 같이
-																// 주 클래스 소속임을 다시 명시하지 않고 이너 클래스 생성자를 직접 호출
-		
-		pride.outInfo(); 		// pride2는 외부에 생성된 이너 클래스 타입의 독립적인 객체로써 주 객체인
-								// pride를 통해 생성이 되었을 뿐 두 객체는 전혀 다른 별도의 객체임
-		System.out.printf("모델=%s, 년식=%d\n", pride2.model, pride2.year);
+		Func t1 = new ImpleClass1();	// 공통 인터페이스 타입변수에 개별 구현 객체를 대입함으로써
+		Func t2 = new ImpleClass2();	// 객체별 공통 기능에 대한 세부적 다형성 확보
+
+		t1.func1();
+		t1.func2();
+		t2.func1();
+		t2.func2();
+
 	}
 }
