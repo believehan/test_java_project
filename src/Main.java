@@ -16,5 +16,18 @@ public class Main {
       System.out.println(str+str1); 
       System.out.println(str.concat(str1).concat("Peace!!"));	// String concat(String str) : 문자열과 문자열을 연결한 문자열 리턴.
       System.out.println(str + "\n\n");
-   }
+      
+      
+      
+      String str3 = "푸들은 강아지다. 말티즈는 강아지다.";
+      
+      System.out.println(str3.replace('다', '니'));		//	replace( char oldChar, char newChar ) : 문자열 내의 모든 oldChar를 newChar로
+      													// 대체한 문자열 리턴
+      
+      System.out.println(str3.replace("강아지", "개"));	// replace(CharSequence target, CharSequence replacement ) : 문자열 내의
+      													// 모든 target을 replacement로 대체한 문자열 리턴
+      
+      System.out.println(str3.substring(4)); 			// substring( int beginIndex [, endindex] ) : 종료 인덱스가 생략된 경우 시작
+      System.out.println(str3.substring(4, 14));		// 인덱스부터 문자열 끝까지 추출하고 끝 인덱스가 지정된 경우 시작 인덱스 부터 끝 인덱스 전까지만 추출
+   }													// 끝 인덱스는 추출 대상에 포함되지 않음에 유의
 }
