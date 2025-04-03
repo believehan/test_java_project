@@ -4,30 +4,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.psy7758.dao.CommonModule;
-import com.psy7758.dto.Client;
+import com.psy7758.dto.ClientInfo;
 
 public class MysqlDao extends CommonModule {
-	private static final String URL = "jdbc:mysql://localhost:3306/test_db";
-	private static final String USER_NAME = "mideum";
-	private static final String PSW = "1234";
+	private static final String url = "jdbc:mysql://localhost:3306/test_db";
 
-	public MysqlDao() {
-		super(URL, USER_NAME, PSW);
+	public MysqlDao(String userName, String psw, boolean accessOk) {
+		super(url, userName, psw, accessOk);
 	}
 
+	// 회원조회 SQL
 	@Override
-	public ArrayList<Client> getClient(String searchField, String searchWord, boolean pub) throws SQLException {
-		String selectSql = String.format("SELECT @rowNum := @rowNum + 1 num, client.* "
-				+ "FROM client, ( SELECT @rowNUm := 0 ) rn " + "WHERE %s LIKE ? %s " + "ORDER BY regDate", searchField,
-				pub ? "" : "AND pub = 1");
+	public ArrayList<ClientInfo> getClients(int pageNum) throws SQLException {
 
-		return getClientData(selectSql, searchWord); // 다 전달할 필요 없음
+		String querySql = String.format("SELECT * FROM client ORDER BY regNum desc Limit %d,5", pageNum);
+
+		return getClientsDb(querySql);
 	}
 
+	// 숫자 세는 메서드
 	@Override
-	public int setClientPubTrue(String id) throws SQLException {
-		String updateSql = String.format("UPDATE client set pub = 1 WHERE id = ?");
+	public int getListCnt() throws SQLException {
+		String querySql = "SELECT COUNT(ID) CNT FROM CLIENT";
 
-		return setPub(updateSql, id);
+		return getListCntDb(querySql);
 	}
 }

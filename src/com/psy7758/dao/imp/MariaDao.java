@@ -4,30 +4,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.psy7758.dao.CommonModule;
-import com.psy7758.dto.Client;
+import com.psy7758.dto.ClientInfo;
 
 public class MariaDao extends CommonModule {
-	private static final String URL = "jdbc:mariadb://localhost:3307/maria_db";
-	private static final String USER_NAME = "mideum2";
-	private static final String PSW = "1234";
+	private static final String url = "jdbc:mariadb://localhost:3307/maria_db";
 
-	public MariaDao() {
-		super(URL, USER_NAME, PSW);
+	public MariaDao(String userName, String psw, boolean accessOk) {
+		super(url, userName, psw, accessOk);
 	}
 
 	@Override
-	public ArrayList<Client> getClient(String searchField, String searchWord, boolean pub) throws SQLException {
-		String selectSql = String.format("SELECT @rowNum := @rowNum + 1 num, client.* "
-				+ "FROM client, ( SELECT @rowNUm := 0 ) rn " + "WHERE %s LIKE ? %s " + "ORDER BY regDate", searchField,
-				pub ? "" : "AND pub = 1");
+	public ArrayList<ClientInfo> getClients(int pageNum) throws SQLException {
+		String querySql = String.format("SELECT * FROM client ORDER BY regNum desc Limit %d,5", pageNum);
 
-		return getClientData(selectSql, searchWord);
+		return getClientsDb(querySql);
 	}
 
 	@Override
-	public int setClientPubTrue(String id) throws SQLException {
-		String updateSql = String.format("UPDATE client set pub = 1 WHERE id = ?");
+	public int getListCnt() throws SQLException {
+		String querySql = "SELECT COUNT(ID) CNT FROM CLIENT";
 
-		return setPub(updateSql, id);
+		return getListCntDb(querySql);
 	}
 }

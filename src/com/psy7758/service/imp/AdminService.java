@@ -4,26 +4,45 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.psy7758.dao.Dao;
-import com.psy7758.dao.imp.MysqlDao;
-import com.psy7758.dto.Client;
+import com.psy7758.dto.ClientInfo;
 import com.psy7758.service.Service;
 
 public class AdminService implements Service {
-	private Dao dao = new MysqlDao();
-//   private Dao dao = new MariaDao();
+	private Dao dao;
 
-	@Override
-	public ArrayList<Client> getClient() throws SQLException {
-		return getClient("id", "");
+	public AdminService(Dao dao) {
+		this.dao = dao;
+	}
+
+	public int getListCnt() {
+		int cnt = 0;
+
+		try {
+			cnt = dao.getListCnt();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return cnt;
 	}
 
 	@Override
-	public ArrayList<Client> getClient(String searchField, String searchWord) throws SQLException {
-		return dao.getClient(searchField, searchWord, true);
+	public ArrayList<ClientInfo> getClients(int pageNum) {
+		ArrayList<ClientInfo> clients = null;
+
+		try {
+			clients = dao.getClients(pageNum);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return clients;
 	}
 
-	// 관리자에게만 제공되는 기능 - 관리자에만 적용되는 확장 메서드.
-	public int setClientPubTrue(String id) throws SQLException {
-		return dao.setClientPubTrue(id);
+	public void close() { // dao에서 close메소드 가져오기
+		try {
+			dao.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

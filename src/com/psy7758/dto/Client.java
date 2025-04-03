@@ -104,7 +104,7 @@ public class Client {
 
 	@Override
 	public String toString() {
-		return String.format("%5s | %20s | %20s | %20s | %20s | %20s\n", num, id, pwd, name, phoneNum, birthDate,
+		return String.format("%10s | %20s | %20s | %20s | %20s | %20s| %20s\n", num, id, pwd, name, phoneNum, birthDate,
 				totPoint);
 	}
 }
